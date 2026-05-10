@@ -1,0 +1,89 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.imovelCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.imovelImg {
+  height: 180px;
+  background: linear-gradient(135deg, var(--blue-ghost), var(--gray-100));
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-pale);
+}
+
+.imovelBadges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.imovelBody {
+  padding: 18px;
+}
+
+.imovelTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--midnight);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.imovelAddress {
+  font-size: 0.8rem;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.imovelSpecs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.imovelSpecs span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.775rem;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.imovelFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--gray-100);
+  padding-top: 12px;
+}
+
+.imovelPrice {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--midnight);
+  letter-spacing: -0.02em;
+}
+
+.imovelActions {
+  display: flex;
+  gap: 4px;
+}

@@ -1,0 +1,106 @@
+// Configuração de conexão
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. USUÁRIOS (CORRETORES/ADMIN)
+model User {
+  id        String    @id @default(cuid())
+  nome      String?
+  email     String    @unique
+  password  String
+  role      String    @default("CORRETOR")
+  
+  // NOVOS CAMPOS PARA O PERFIL DO CORRETOR
+  phone     String?
+  avatar    String?
+  creci     String?
+  empresa   String?
+  
+  // Relacionamentos
+  imoveis   Imovel[]
+  clientes  Cliente[]
+  visitas   Visita[]
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// 2. IMÓVEIS
+model Imovel {
+  id          String   @id @default(cuid())
+  titulo      String
+  descricao   String?
+  preco       Float
+  tipo        String   // CASA, APARTAMENTO, TERRENO
+  status      String   @default("VENDA") // VENDA, ALUGUEL, RESERVADO, VENDIDO
+  
+  // Características físicas
+  area        Float?
+  quartos     Int?
+  banheiros   Int?
+  vagas       Int?
+  
+  // Localização
+  endereco    String?
+  cidade      String?
+  estado      String?
+  cep         String?
+  
+  // Mídia e Status de Negócio
+  imagens     String?    @default("[]") 
+  destaque    Boolean    @default(false)
+  
+  // Relacionamentos
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  visitas     Visita[]   // Um imóvel pode ter várias visitas
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+// 3. CLIENTES (O seu erro estava aqui, certifique-se de ter apenas UM deste)
+model Cliente {
+  id          String   @id @default(cuid())
+  nome        String
+  email       String   @unique
+  telefone    String?
+  tipo        String   // COMPRADOR, VENDEDOR, etc.
+  
+  // NOVOS CAMPOS ADICIONADOS ABAIXO:
+  interesse   String?  
+  orcamento   Float?
+  observacoes String?
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  visitas     Visita[]
+  createdAt   DateTime @default(now())
+}
+
+// 4. VISITAS/AGENDAMENTOS
+model Visita {
+  id          String   @id @default(cuid())
+  dataVisita  DateTime
+  status      String   @default("AGENDADA") // AGENDADA, CONCLUIDA, CANCELADA
+  observacoes String?  
+  
+  // Relacionamentos
+  imovelId    String
+  imovel      Imovel   @relation(fields: [imovelId], references: [id])
+  
+  clienteId   String
+  cliente     Cliente  @relation(fields: [clienteId], references: [id])
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  createdAt   DateTime @default(now())
+}
