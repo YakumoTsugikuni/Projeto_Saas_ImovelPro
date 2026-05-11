@@ -66,8 +66,8 @@ export interface ValidatedClienteData {
 export interface ValidatedImovelData {
   titulo: string;
   descricao?: string;
-  tipo?: string;
-  status?: string;
+  tipo: string; // ✅ Sempre string (nunca undefined)
+  status: string; // ✅ Sempre string (nunca undefined)
   preco: number;
   area?: number;
   quartos?: number;
@@ -107,7 +107,7 @@ export function validateClienteInput(data: any): { valid: boolean; data?: Valida
       telefone: sanitizeString(data.telefone),
       tipo: data.tipo ? sanitizeString(data.tipo) : 'COMPRADOR',
       interesse: data.interesse ? sanitizeString(data.interesse) : undefined,
-      orcamento,
+      orcamento: orcamento ?? undefined,
       observacoes: data.observacoes ? sanitizeString(data.observacoes) : undefined,
     },
   };
@@ -160,13 +160,13 @@ export function validateImovelInput(data: any): { valid: boolean; data?: Validat
     data: {
       titulo: sanitizeString(data.titulo),
       descricao: data.descricao ? sanitizeString(data.descricao) : undefined,
-      tipo: data.tipo ? sanitizeString(data.tipo) : 'APARTAMENTO',
-      status: data.status ? sanitizeString(data.status) : 'VENDA',
+      tipo: data.tipo ? sanitizeString(data.tipo) : 'APARTAMENTO', // ✅ Always returns string
+      status: data.status ? sanitizeString(data.status) : 'VENDA', // ✅ Always returns string
       preco,
-      area,
-      quartos,
-      banheiros,
-      vagas,
+      area: area ?? undefined,
+      quartos: quartos ?? undefined,
+      banheiros : banheiros ?? undefined,
+      vagas: vagas ?? undefined,
       endereco: sanitizeString(data.endereco),
       cidade: sanitizeString(data.cidade),
       estado: sanitizeString(data.estado),

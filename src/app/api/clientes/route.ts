@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
     const cliente = await prisma.cliente.create({
       data: {
         nome,
-        email: email || null,
+        email: email || `cliente-${Date.now()}@noemail.com`, // ✅ Email obrigatório no schema
         telefone,
-        tipo,
+        tipo: tipo || 'COMPRADOR', // ✅ Tipo sempre com valor padrão
         interesse,
         orcamento,
         observacoes,

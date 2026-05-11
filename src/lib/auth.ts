@@ -29,15 +29,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!passwordMatch) return null
 
-        // O segredo está aqui: mapeamos os campos do Prisma para o padrão do NextAuth
-        // e usamos 'as any' para o TS não reclamar de campos extras como 'role'
+        // ✅ Tipagem correta sem 'as any' - ver types/security.ts
         return {
           id: user.id,
-          name: user.nome,    // Traduz 'nome' para 'name'
+          name: user.nome,
           email: user.email,
-          image: user.avatar, // Traduz 'avatar' para 'image'
-          role: user.role,    // Campo personalizado
-        } as any
+          image: user.avatar,
+          role: user.role,
+        }
       },
     }),
   ],
@@ -45,15 +44,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.role = (user as any).role
+        token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        // Injetamos os dados no objeto de sessão
-        (session.user as any).id = token.id as string
-        (session.user as any).role = token.role as string
+        session.user.id = token.id as string
+        session.user.role = token.role as string
       }
       return session
     },

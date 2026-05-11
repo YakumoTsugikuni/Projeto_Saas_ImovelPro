@@ -94,8 +94,8 @@ export async function POST(req: NextRequest) {
       data: {
         titulo,
         descricao,
-        tipo,
-        status,
+        tipo, // ✅ Sempre possui valor (validação garante)
+        status, // ✅ Sempre possui valor (validação garante)
         preco,
         area,
         quartos,

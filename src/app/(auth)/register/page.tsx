@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { validatePasswordStrengthClient, validateEmailClient } from '@/lib/clientValidation'
 import styles from '../auth.module.css'
 
 export default function RegisterPage() {
@@ -18,13 +19,26 @@ export default function RegisterPage() {
     e.preventDefault()
     setError('')
 
+    // ✅ SEGURANÇA: Validação no cliente
+    if (!form.name || form.name.trim().length === 0) {
+      setError('Nome é obrigatório.')
+      return
+    }
+
+    if (!form.email || !validateEmailClient(form.email)) {
+      setError('Email inválido.')
+      return
+    }
+
     if (form.password !== form.confirmPassword) {
       setError('As senhas não coincidem.')
       return
     }
 
-    if (form.password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres.')
+    // ✅ SEGURANÇA: Validação forte de senha
+    const passwordValidation = validatePasswordStrengthClient(form.password)
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.error || 'Senha fraca.')
       return
     }
 
@@ -35,8 +49,12 @@ export default function RegisterPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: form.name, email: form.email, password: form.password,
-          phone: form.phone, empresa: form.empresa, creci: form.creci,
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          phone: form.phone || undefined,
+          empresa: form.empresa || undefined,
+          creci: form.creci || undefined,
         }),
       })
 
@@ -55,7 +73,7 @@ export default function RegisterPage() {
   }
 
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm(f => ({ ...f, [key]: e.target.value }))
+    setForm((f) => ({ ...f, [key]: e.target.value }))
 
   return (
     <div className={styles.authRoot}>
@@ -151,12 +169,43 @@ export default function RegisterPage() {
 
             <div className={styles.formRow}>
               <div className="form-group">
-                <label className="form-label" htmlFor="reg-password">Senha *</label>
-                <input id="reg-password" type="password" className="form-input" placeholder="Mínimo 6 caracteres" value={form.password} onChange={set('password')} required autoComplete="new-password" />
+                <label className="form-label" htmlFor="reg-password">
+                  Senha * {form.password && <span style={{ fontSize: '0.85em', color: 'var(--text-secondary)' }}>
+                    (Obrigatório: maiúsculas, minúsculas, números, símbolos)
+                  </span>}
+                </label>
+                <input
+                  id="reg-password"
+                  type="password"
+                  className="form-input"
+                  placeholder="Mín. 8 caracteres com maiúsculas, números e símbolos"
+                  value={form.password}
+                  onChange={set('password')}
+                  required
+                  autoComplete="new-password"
+                />
+                {form.password && (
+                  <div style={{ marginTop: 8, fontSize: '0.85em' }}>
+                    {validatePasswordStrengthClient(form.password).valid ? (
+                      <span style={{ color: 'var(--color-success, #10b981)' }}>✓ Senha forte</span>
+                    ) : (
+                      <span style={{ color: 'var(--color-error, #ef4444)' }}>✗ {validatePasswordStrengthClient(form.password).error}</span>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="confirm-password">Confirmar Senha *</label>
-                <input id="confirm-password" type="password" className="form-input" placeholder="Repita a senha" value={form.confirmPassword} onChange={set('confirmPassword')} required autoComplete="new-password" />
+                <input
+                  id="confirm-password"
+                  type="password"
+                  className="form-input"
+                  placeholder="Repita a senha"
+                  value={form.confirmPassword}
+                  onChange={set('confirmPassword')}
+                  required
+                  autoComplete="new-password"
+                />
               </div>
             </div>
 

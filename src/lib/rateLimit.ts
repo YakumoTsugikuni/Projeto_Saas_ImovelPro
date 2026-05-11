@@ -68,7 +68,9 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000)
 
-export function setRateLimitHeaders(response: Response, rateLimit: ReturnType<typeof checkRateLimit>) {
+import { NextResponse } from 'next/server'
+
+export function setRateLimitHeaders(response: NextResponse, rateLimit: ReturnType<typeof checkRateLimit>) {
   response.headers.set('X-RateLimit-Limit', '100')
   response.headers.set('X-RateLimit-Remaining', String(rateLimit.remaining))
   response.headers.set('X-RateLimit-Reset', String(Math.ceil(rateLimit.resetTime / 1000)))

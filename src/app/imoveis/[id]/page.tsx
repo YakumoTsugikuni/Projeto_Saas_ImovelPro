@@ -70,7 +70,7 @@ export default function ImovelDetalhesPage() {
     )
   }
 
-  const imgs = JSON.parse(imovel.imagens || '[]')
+  const imgs: string[] = JSON.parse(imovel.imagens || '[]')
 
   return (
     <div className="animate-fadeIn">
@@ -96,7 +96,7 @@ export default function ImovelDetalhesPage() {
               <div className={styles.mainImage} style={{ backgroundImage: `url(${imgs[currentImageIndex]})` }} />
               {imgs.length > 1 && (
                 <div className={styles.thumbnails}>
-                  {imgs.map((img, idx) => (
+                  {imgs.map((img: string, idx: number) => (
                     <div
                       key={idx}
                       className={styles.thumbnail}

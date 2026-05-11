@@ -8,9 +8,9 @@ export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient(
     process.env.NODE_ENV === 'production'
-      ? {} // Sem logs em produção
+      ? undefined // ✅ Sem configuração em produção (padrão)
       : {
-          log: ['error', 'warn'], // Apenas erros e warnings em desenvolvimento
+          log: ['error', 'warn'], // ✅ Apenas erros e warnings em desenvolvimento
         }
   )
 
