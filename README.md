@@ -175,13 +175,16 @@ O projeto utiliza NextAuth com autenticação por credenciais (email/senha):
 
 ### Vercel (Recomendado)
 
+O projeto está pronto para upload no Vercel. Se você está usando o repositório com a pasta `imovel-pro`, configure o `Root Directory` do projeto Vercel como `imovel-pro`.
+
 1. Faça push do código para GitHub
 2. Conecte o repositório no Vercel
 3. Configure variáveis de ambiente:
    - `DATABASE_URL`: URL do banco (ex: Supabase)
    - `NEXTAUTH_SECRET`: Chave secreta
    - `NEXTAUTH_URL`: URL de produção
-4. Deploy automático a cada push
+4. Em Settings > General > Root Directory, defina `imovel-pro`
+5. Deploy automático a cada push
 
 ### Outras Plataformas
 

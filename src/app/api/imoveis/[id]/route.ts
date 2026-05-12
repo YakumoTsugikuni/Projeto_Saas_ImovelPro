@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db'
 import { validateImovelInput } from '@/lib/validation'
 import { getClientIP, checkRateLimit, setRateLimitHeaders } from '@/lib/rateLimit'
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
 
@@ -20,14 +20,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return setRateLimitHeaders(response, rateLimit)
   }
 
+  const { id } = await params
   // ✅ SEGURANÇA: Validar ID
-  if (!params.id || typeof params.id !== 'string' || params.id.length === 0) {
+  if (!id || typeof id !== 'string' || id.length === 0) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
   }
 
   try {
     const imovel = await prisma.imovel.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: { select: { visitas: true } },
       },
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
 
@@ -67,15 +68,16 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     return setRateLimitHeaders(response, rateLimit)
   }
 
+  const { id } = await params
   // ✅ SEGURANÇA: Validar ID
-  if (!params.id || typeof params.id !== 'string' || params.id.length === 0) {
+  if (!id || typeof id !== 'string' || id.length === 0) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
   }
 
   try {
     // ✅ SEGURANÇA: Verificar autorização antes de atualizar
     const existingImovel = await prisma.imovel.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingImovel) {
@@ -98,7 +100,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const { titulo, descricao, tipo, status, preco, area, quartos, banheiros, vagas, endereco, cidade, estado, cep, imagens, destaque } = validation.data!
 
     const imovel = await prisma.imovel.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         titulo,
         descricao,
@@ -126,7 +128,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
 
@@ -142,15 +144,16 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return setRateLimitHeaders(response, rateLimit)
   }
 
+  const { id } = await params
   // ✅ SEGURANÇA: Validar ID
-  if (!params.id || typeof params.id !== 'string' || params.id.length === 0) {
+  if (!id || typeof id !== 'string' || id.length === 0) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
   }
 
   try {
     // ✅ SEGURANÇA: Verificar autorização antes de deletar
     const existingImovel = await prisma.imovel.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingImovel) {
@@ -163,9 +166,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
 
     // ✅ SEGURANÇA: Deletar visitas relacionadas
-    await prisma.visita.deleteMany({ where: { imovelId: params.id } })
+    await prisma.visita.deleteMany({ where: { imovelId: id } })
     await prisma.imovel.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     const response = NextResponse.json({ success: true })
