@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient(
-    process.env.NODE_ENV === 'production'
-      ? undefined // ✅ Sem configuração em produção (padrão)
-      : {
-          log: ['error', 'warn'], // ✅ Apenas erros e warnings em desenvolvimento
-        }
-  )
+const databaseUrl = process.env.DATABASE_URL
+if (!databaseUrl) {
+  throw new Error('Missing DATABASE_URL environment variable')
+}
+const pgAdapter = new PrismaPg(databaseUrl)
+
+const clientOptions = { adapter: pgAdapter }
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient(clientOptions)
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
