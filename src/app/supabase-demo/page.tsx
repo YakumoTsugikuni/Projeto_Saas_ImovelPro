@@ -8,10 +8,13 @@ export default async function Page() {
   const { data: todos } = await supabase.from('todos').select()
 
   return (
-    <ul>
-      {todos?.map((todo: any) => (
-        <li key={todo.id}>{todo.name}</li>
-      ))}
-    </ul>
+    <div style={{ padding: '2rem' }}>
+      <h1>Supabase Demo</h1>
+      <ul>
+        {todos?.map((todo: any) => (
+          <li key={todo.id}>{todo.name}</li>
+        ))}
+      </ul>
+    </div>
   )
 }
