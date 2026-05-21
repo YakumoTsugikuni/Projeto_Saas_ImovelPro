@@ -531,8 +531,8 @@
 
 .aboutContent {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  grid-template-columns: minmax(320px, 1.2fr) minmax(280px, 0.8fr);
+  gap: 64px;
   align-items: start;
 }
 
@@ -540,10 +540,11 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+  min-width: 0;
 }
 
 .aboutBlock h3 {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--midnight);
   margin-bottom: 12px;
@@ -553,15 +554,17 @@
   font-size: 0.95rem;
   line-height: 1.8;
   color: var(--gray-600);
+  max-width: 100%;
 }
 
 .aboutList {
   list-style: none;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 10px;
   font-size: 0.95rem;
   color: var(--gray-600);
+  padding: 0;
+  margin: 0;
 }
 
 .aboutList li {
@@ -569,9 +572,9 @@
 }
 
 .aboutStats {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 20px;
+  min-width: 0;
 }
 
 .aboutStatCard {
@@ -633,10 +636,12 @@
 /* FOOTER */
 .footer {
   background: var(--midnight);
-  padding: 32px 0;
+  padding: 40px 24px;
 }
 
 .footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -669,5 +674,6 @@
   .heroPreview { display: none; }
   .navLinks { display: none; }
   .aboutContent { grid-template-columns: 1fr; gap: 40px; }
+  .aboutText { align-items: flex-start; }
   .footerContent { flex-direction: column; text-align: center; }
 }
