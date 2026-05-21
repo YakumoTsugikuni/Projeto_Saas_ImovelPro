@@ -5,8 +5,8 @@ export default async function Page() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
 
-  const { data: todos, error } = await supabase.from('todos').select()
-  const hasTodos = Array.isArray(todos) && todos.length > 0
+  const { data: imoveis, error } = await supabase.from('Imovel').select()
+  const hasImoveis = Array.isArray(imoveis) && imoveis.length > 0
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -15,17 +15,20 @@ export default async function Page() {
         <div style={{ color: '#dc2626' }}>
           Erro ao carregar dados: {error.message}
         </div>
-      ) : hasTodos ? (
+      ) : hasImoveis ? (
         <ul>
-          {todos.map((todo: any) => (
-            <li key={todo.id}>{todo.name}</li>
+          {imoveis.map((imovel: any) => (
+            <li key={imovel.id}>
+              <strong>{imovel.titulo || imovel.id}</strong>
+              {imovel.cidade ? ` — ${imovel.cidade}` : ''}
+            </li>
           ))}
         </ul>
       ) : (
         <div>
-          Nenhum registro encontrado na tabela <strong>todos</strong>.
+          Nenhum registro encontrado na tabela <strong>Imovel</strong>.
           <br />
-          Crie alguns registros no Supabase para testar.
+          Crie imóveis nesta aplicação ou no painel Supabase para testar.
         </div>
       )}
     </div>

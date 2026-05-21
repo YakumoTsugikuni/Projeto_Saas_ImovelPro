@@ -5,29 +5,32 @@ export default async function Page() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
 
-  const { data: todos, error } = await supabase.from('todos').select()
-  const hasTodos = Array.isArray(todos) && todos.length > 0
+  const { data: imoveis, error } = await supabase.from('Imovel').select()
+  const hasImoveis = Array.isArray(imoveis) && imoveis.length > 0
 
   return (
     <main style={{ padding: '2rem' }}>
       <h1>ImóvelPro</h1>
-      <p>Bem-vindo ao painel. Esta página exibe registros da tabela <code>todos</code> do Supabase.</p>
+      <p>Bem-vindo ao painel. Esta página exibe registros da tabela <code>Imovel</code> do Supabase.</p>
 
       {error ? (
         <div style={{ color: '#dc2626' }}>
           Erro ao carregar dados: {error.message}
         </div>
-      ) : hasTodos ? (
+      ) : hasImoveis ? (
         <ul>
-          {todos.map((todo: any) => (
-            <li key={todo.id}>{todo.name}</li>
+          {imoveis.map((imovel: any) => (
+            <li key={imovel.id}>
+              <strong>{imovel.titulo || imovel.id}</strong>
+              {imovel.cidade ? ` — ${imovel.cidade}` : ''}
+            </li>
           ))}
         </ul>
       ) : (
         <div>
-          Nenhum registro encontrado na tabela <strong>todos</strong>.
+          Nenhum registro encontrado na tabela <strong>Imovel</strong>.
           <br />
-          Verifique o banco Supabase ou navegue para <a href="/supabase-demo">/supabase-demo</a>.
+          Crie imóveis nesta aplicação ou no painel Supabase.
         </div>
       )}
     </main>
