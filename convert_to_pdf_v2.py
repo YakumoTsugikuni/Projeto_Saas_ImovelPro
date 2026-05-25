@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Script para converter Markdown para PDF usando reportlab
-Cria um PDF profissional e bem formatado
+Versão V2.1 - Corrigida contra loops infinitos em Tabelas e Mermaid
 """
 
 import os
@@ -11,16 +11,16 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
 from datetime import datetime
 import html
 
 # Configurações
-input_md = r"c:\Projeto PROMETHEU\imovel-pro\ESTUDO_COMPLETO.md"
-output_pdf = r"c:\Projeto PROMETHEU\imovel-pro\ESTUDO_IMOVEL_PRO.pdf"
+input_md = r"c:\Projeto PROMETHEU\imovel-pro\apresentacao_projeto.md"
+output_pdf = r"c:\Projeto PROMETHEU\imovel-pro\apresentacao_projeto.pdf"
 
 def parse_markdown(md_content):
-    """Converte markdown para uma estrutura de elementos PDF"""
+    """Converte markdown para uma estrutura de elementos PDF mitigando travamentos"""
     lines = md_content.split('\n')
     elements = []
     
@@ -28,11 +28,20 @@ def parse_markdown(md_content):
     while i < len(lines):
         line = lines[i]
         
-        # Pular linhas vazias (exceto no início)
+        # Pular linhas vazias
         if not line.strip():
             i += 1
             continue
         
+        # Ignorar linhas de tabelas markdown (evita o loop infinito do else)
+        if line.strip().startswith('|'):
+            # Opcional: Extrai o texto da tabela de forma simples para não perder a info
+            clean_table_line = line.replace('|', ' ').strip()
+            if clean_table_line and not clean_table_line.startswith('---'):
+                elements.append(('paragraph', f"<i>[Tabela] {clean_table_line}</i>"))
+            i += 1
+            continue
+
         # Título nível 1
         if line.startswith('# '):
             elements.append(('h1', line[2:].strip()))
@@ -57,23 +66,28 @@ def parse_markdown(md_content):
             elements.append(('spacer', 0.2))
             i += 1
         
-        # Bloco de código
+        # Bloco de código / Mermaid
         elif line.strip().startswith('```'):
+            is_mermaid = 'mermaid' in line
             code_lines = []
             i += 1
             while i < len(lines) and not lines[i].strip().startswith('```'):
                 code_lines.append(lines[i])
                 i += 1
-            elements.append(('code', '\n'.join(code_lines)))
+            
+            if is_mermaid:
+                elements.append(('paragraph', "<b>[Gráfico/Diagrama Mermaid Omitido no ReportLab]</b>"))
+            else:
+                elements.append(('code', '\n'.join(code_lines)))
+            
             elements.append(('spacer', 0.1))
             i += 1
         
         # Lista ordenada
-        elif line.strip() and line[0].isdigit() and '. ' in line:
+        elif line.strip() and line.strip()[0].isdigit() and '. ' in line:
             list_items = []
-            while i < len(lines) and lines[i].strip() and lines[i][0].isdigit() and '. ' in lines[i]:
-                item = lines[i].strip()
-                list_items.append(item)
+            while i < len(lines) and lines[i].strip() and lines[i].strip()[0].isdigit() and '. ' in lines[i]:
+                list_items.append(lines[i].strip())
                 i += 1
             elements.append(('ordered_list', list_items))
             elements.append(('spacer', 0.1))
@@ -88,11 +102,11 @@ def parse_markdown(md_content):
             elements.append(('bullet_list', list_items))
             elements.append(('spacer', 0.1))
         
-        # Parágrafo normal
+        # Parágrafo normal (Garantindo incremento seguro de i)
         else:
             para_lines = []
-            while i < len(lines) and lines[i].strip() and not any(lines[i].startswith(x) for x in ['#', '```', '---', '-', '*', '+']):
-                if not (lines[i][0].isdigit() and '. ' in lines[i]):
+            while i < len(lines) and lines[i].strip() and not any(lines[i].strip().startswith(x) for x in ['#', '```', '---', '-', '*', '+', '|']):
+                if not (lines[i].strip()[0].isdigit() and '. ' in lines[i]):
                     para_lines.append(lines[i])
                     i += 1
                 else:
@@ -102,27 +116,25 @@ def parse_markdown(md_content):
                 text = ' '.join(para_lines)
                 elements.append(('paragraph', text))
                 elements.append(('spacer', 0.1))
+            else:
+                # Se cair em alguma exceção visual não prevista, avança de forma segura
+                i += 1
     
     return elements
 
 def format_text(text):
-    """Formata texto markdown para HTML"""
-    # Remover emojis
-    text = re.sub(r'[\U0001F300-\U0001F9FF]', '', text)
+    """Formata texto markdown básico para tags suportadas pelo ReportLab Paragraph"""
+    # Tratar alertas markdown customizados
+    text = text.replace("[!TIP]", "<b>Dica:</b>")
     
     # Negrito
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
-    text = re.sub(r'__(.*?)__', r'<b>\1</b>', text)
     
     # Itálico
     text = re.sub(r'\*(.*?)\*', r'<i>\1</i>', text)
-    text = re.sub(r'_(.*?)_', r'<i>\1</i>', text)
     
     # Código inline
     text = re.sub(r'`(.*?)`', r'<font face="Courier" size="9"><b>\1</b></font>', text)
-    
-    # Links
-    text = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2" color="blue"><u>\1</u></a>', text)
     
     return text
 
@@ -131,14 +143,12 @@ def md_to_pdf(input_file, output_file):
     try:
         print(f"📖 Lendo arquivo: {input_file}")
         
-        # Ler arquivo markdown
         with open(input_file, 'r', encoding='utf-8') as f:
             md_content = f.read()
         
         print("✅ Arquivo lido com sucesso")
         print("🔄 Convertendo Markdown para elementos PDF...")
         
-        # Configurar PDF
         doc = SimpleDocTemplate(
             output_file,
             pagesize=A4,
@@ -146,30 +156,24 @@ def md_to_pdf(input_file, output_file):
             leftMargin=1.5*cm,
             topMargin=1.5*cm,
             bottomMargin=1.5*cm,
-            title="ImóvelPro - Documentação de Estudos"
+            title="ImóvelPro - Apresentação do Projeto"
         )
         
-        # Estilos customizados
         styles = getSampleStyleSheet()
         
-        # Estilos personalizados
         style_h1 = ParagraphStyle(
             'CustomH1',
             parent=styles['Heading1'],
-            fontSize=24,
+            fontSize=22,
             textColor=colors.HexColor('#0066cc'),
             spaceAfter=12,
             spaceBefore=12,
-            borderColor=colors.HexColor('#0066cc'),
-            borderWidth=2,
-            borderPadding=6,
-            borderRadius=3,
         )
         
         style_h2 = ParagraphStyle(
             'CustomH2',
             parent=styles['Heading2'],
-            fontSize=16,
+            fontSize=15,
             textColor=colors.HexColor('#0052a3'),
             spaceAfter=10,
             spaceBefore=10,
@@ -178,7 +182,7 @@ def md_to_pdf(input_file, output_file):
         style_h3 = ParagraphStyle(
             'CustomH3',
             parent=styles['Heading3'],
-            fontSize=13,
+            fontSize=12,
             textColor=colors.HexColor('#0066cc'),
             spaceAfter=8,
             spaceBefore=8,
@@ -204,53 +208,18 @@ def md_to_pdf(input_file, output_file):
             borderPadding=6,
         )
         
-        # Capa do documento
         elements = []
         
-        # Adicionar capa
+        # Capa Simples
         elements.append(Spacer(1, 2*cm))
-        title = Paragraph("<b>📚 DOCUMENTAÇÃO DE ESTUDOS</b><br/><font size=18>ImóvelPro</font>", style_h1)
-        elements.append(title)
-        elements.append(Spacer(1, 1*cm))
-        
-        subtitle = Paragraph(
-            "<font size=11>Guia Completo sobre Tecnologias, Arquitetura, APIs e Desenvolvimento<br/>"
-            f"Atualizado em: {datetime.now().strftime('%d de %B de %Y')}</font>",
-            style_body
-        )
-        elements.append(subtitle)
-        elements.append(Spacer(1, 2*cm))
-        
-        # Sumário
-        elements.append(PageBreak())
-        elements.append(Paragraph("<b>📋 SUMÁRIO</b>", style_h2))
-        elements.append(Spacer(1, 0.3*cm))
-        
-        sumario_items = [
-            "1. Visão Geral do Projeto",
-            "2. Stack Tecnológico Completo",
-            "3. Arquitetura do Projeto",
-            "4. Banco de Dados",
-            "5. APIs e Endpoints",
-            "6. Componentes React",
-            "7. Hooks Customizados",
-            "8. Autenticação e Segurança",
-            "9. Padrões de Código",
-            "10. Fluxos de Trabalho",
-            "11. Deployment e Produção",
-            "12. Guia de Desenvolvimento",
-        ]
-        
-        for item in sumario_items:
-            p = Paragraph(f"• {item}", styles['Normal'])
-            elements.append(p)
-        
+        elements.append(Paragraph("<b>📚 APRESENTAÇÃO DO PROJETO</b><br/><font size=18>ImóvelPro</font>", style_h1))
         elements.append(Spacer(1, 0.5*cm))
+        elements.append(Paragraph(f"Gerado em: {datetime.now().strftime('%d/%m/%Y')}", style_body))
+        elements.append(PageBreak())
         
-        # Parse markdown
+        # Parse do conteúdo
         parsed = parse_markdown(md_content)
         
-        # Adicionar elementos parseados
         for elem_type, content in parsed:
             if elem_type == 'h1':
                 elements.append(PageBreak())
@@ -267,29 +236,21 @@ def md_to_pdf(input_file, output_file):
             
             elif elem_type == 'paragraph':
                 clean_content = format_text(html.escape(content))
-                try:
-                    elements.append(Paragraph(clean_content, style_body))
-                except:
-                    elements.append(Paragraph(content[:100], style_body))
+                elements.append(Paragraph(clean_content, style_body))
             
             elif elem_type == 'bullet_list':
                 for item in content:
                     clean_item = format_text(html.escape(item))
-                    try:
-                        elements.append(Paragraph(f"• {clean_item}", style_body))
-                    except:
-                        elements.append(Paragraph(f"• {item[:80]}", style_body))
+                    elements.append(Paragraph(f"• {clean_item}", style_body))
             
             elif elem_type == 'ordered_list':
                 for idx, item in enumerate(content, 1):
+                    # Tratar se o item já vem com número do parse anterior
                     clean_item = format_text(html.escape(item))
-                    try:
-                        elements.append(Paragraph(f"{idx}. {clean_item}", style_body))
-                    except:
-                        elements.append(Paragraph(f"{idx}. {item[:80]}", style_body))
+                    elements.append(Paragraph(f"{clean_item}", style_body))
             
             elif elem_type == 'code':
-                code_text = content.strip()[:500]  # Limitar tamanho
+                code_text = content.strip()
                 elements.append(Paragraph(f"<font face='Courier' size='8'>{html.escape(code_text)}</font>", style_code))
             
             elif elem_type == 'spacer':
@@ -298,18 +259,10 @@ def md_to_pdf(input_file, output_file):
             elif elem_type == 'hr':
                 elements.append(Paragraph("_" * 80, styles['Normal']))
         
-        # Gerar PDF
         print("✅ Elementos processados com sucesso")
         print("🖨️  Gerando PDF...")
-        
         doc.build(elements)
-        
         print(f"✅ PDF gerado com sucesso: {output_file}")
-        
-        # Verificar tamanho
-        if os.path.exists(output_file):
-            size_mb = os.path.getsize(output_file) / (1024 * 1024)
-            print(f"📊 Tamanho do arquivo: {size_mb:.2f} MB")
         
     except Exception as e:
         print(f"❌ Erro durante conversão: {str(e)}")
@@ -318,13 +271,9 @@ def md_to_pdf(input_file, output_file):
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🚀 CONVERSOR MARKDOWN → PDF (ReportLab)")
+    print("🚀 CONVERSOR MARKDOWN → PDF (ReportLab Corrigido)")
     print("=" * 60)
     print()
-    
     md_to_pdf(input_md, output_pdf)
-    
     print()
-    print("=" * 60)
-    print("✨ Processo concluído!")
     print("=" * 60)

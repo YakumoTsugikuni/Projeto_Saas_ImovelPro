@@ -1,4 +1,5 @@
 // Configuração de conexão
+// O URL do datasource agora é carregado em prisma.config.cjs com Prisma 7.
 datasource db {
   provider = "postgresql"
 }
