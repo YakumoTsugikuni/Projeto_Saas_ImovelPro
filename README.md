@@ -1,243 +1,181 @@
 # 🏠 ImóvelPro - SaaS para Imobiliárias
 
-Uma plataforma moderna e completa para corretores e imobiliárias gerenciarem seus imóveis, clientes e visitas de forma eficiente.
+Uma plataforma SaaS moderna, inteligente e de alta performance desenvolvida especialmente para corretores e imobiliárias gerenciarem seus imóveis, clientes e agendamento de visitas com máxima eficiência.
 
-## ✨ Características
+---
 
-- 🔐 **Autenticação Segura**: Sistema de login com NextAuth e bcrypt
-- 🏢 **Gestão de Imóveis**: CRUD completo com filtros por tipo e status
-- 👥 **Gestão de Clientes**: Cadastro e controle de prospects e clientes
-- 📅 **Agendamento de Visitas**: Controle de visitas com status em tempo real
-- 📊 **Dashboard Analytics**: Estatísticas e visitas próximas
-- 👤 **Perfil de Usuário**: Edição de dados e alteração de senha
-- 🎨 **Design Profissional**: Interface moderna com cores Azul, Branco e Azul da Meia Noite
-- 📱 **Responsivo**: Funciona perfeitamente em desktop, tablet e mobile
+## 🎨 Novo Visual Premium & Design System
 
-## 🚀 Começando Rápido
+O **ImóvelPro** conta com uma interface de usuário rica, extremamente polida e moderna, projetada para impressionar desde o primeiro contato.
+
+- 🌌 **Paleta de Cores Curada**:
+  - **Azul da Meia Noite** (`#0D1B40`): Cor principal para textos e headlines, transmitindo solidez e elegância.
+  - **Azul Médio** (`#2563EB`): Utilizado para botões primários e interações principais.
+  - **Azul Claro** (`#5DADE2`): Para acentos, badges e links importantes.
+  - **Off-White** (`#F8FAFF`): Fundo limpo e suave para minimizar a fadiga visual.
+- 📐 **Tipografia Moderna**: Uso da fonte **Inter** (Google Fonts) com pesos estrategicamente definidos para excelente legibilidade.
+- ✨ **Micro-animações**: Efeitos sutis de *fade-in*, *slide-up* e transições suaves nos botões, cards e overlays de modais, trazendo dinamismo e fluidez para a experiência do usuário.
+- 📱 **Responsividade Total (Mobile-First)**: Otimização completa para qualquer tamanho de tela (desktops, tablets e smartphones).
+
+---
+
+## ⚡ Stack Tecnológica
+
+O projeto utiliza o que há de mais moderno no ecossistema de desenvolvimento web:
+
+- **Framework**: [Next.js 14/15/16](https://nextjs.org/) (App Router & API Routes)
+- **Biblioteca de Interface**: [React 19](https://react.dev/)
+- **ORM & Banco**: [Prisma ORM 7](https://www.prisma.io/) com suporte a banco de dados PostgreSQL
+- **Integração Cloud / Realtime**: [Supabase](https://supabase.com/) (`@supabase/ssr` e `@supabase/supabase-js`)
+- **Conectividade**: `@prisma/adapter-pg` e `pg` pool para conexões robustas em ambientes serverless
+- **Autenticação**: [NextAuth.js](https://next-auth.js.org/) & `bcryptjs`
+- **Ícones**: [Lucide React](https://lucide.dev/)
+
+---
+
+## ✨ Principais Funcionalidades
+
+- 🔐 **Autenticação Segura**: Login completo com NextAuth, hash de senhas com bcrypt, sessões seguras em JWT e proteção automática de rotas do sistema.
+- 🏢 **Gestão de Imóveis**: CRUD completo com filtros dinâmicos por tipo (Casa, Apartamento, Terreno) e status (Venda, Aluguel, Vendido, Alugado).
+- 👥 **Gestão de Clientes**: Cadastro detalhado de prospects e clientes, rastreamento de orçamento de interesse e observações gerais.
+- 📅 **Controle de Visitas**: Agendamento integrado de visitas associando corretores, clientes e imóveis com status em tempo real (Agendada, Concluída, Cancelada).
+- 📊 **Dashboard Analytics**: Gráficos analíticos, contagem de portfólio total em valores, visitas agendadas próximas e acompanhamento de metas.
+- ⚙️ **Integração com Supabase**: Conectividade direta ao Supabase para leitura e gravação assíncrona, além de uma página de demonstração dedicada (`/supabase-demo`) para verificar a sincronização de dados em tempo real.
+
+---
+
+## 🚀 Como Começar Localmente
 
 ### Pré-requisitos
 - Node.js 18+
-- npm ou yarn
+- Provedor PostgreSQL (local ou na nuvem via Supabase)
 
-### Instalação
-
-1. **Clone ou extraia o projeto**
+### 1. Clonar o Projeto e Instalar Dependências
 ```bash
+git clone https://github.com/YakumoTsugikuni/Projeto_Saas_ImovelPro.git
 cd imovel-pro
-```
-
-2. **Instale as dependências**
-```bash
 npm install
 ```
 
-3. **Configure as variáveis de ambiente**
-```bash
-# .env.local já existe, mas você pode modificar se necessário
-# Altere NEXTAUTH_SECRET para uma chave segura em produção
+### 2. Configurar Variáveis de Ambiente
+Crie um arquivo `.env` ou `.env.local` na raiz do projeto (use o `.env.example` como referência):
+
+```env
+# Banco de Dados (Supabase Pooler PostgreSQL)
+DATABASE_URL="postgresql://postgres.USER:PASSWORD@aws-1-sa-east-1.pooler.supabase.com:5432/postgres?pgbouncer=true"
+
+# Supabase Public Keys (Para o cliente SSR)
+NEXT_PUBLIC_SUPABASE_URL="https://seu-projeto.supabase.co"
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="sua-chave-publica-anonima"
+
+# NextAuth
+NEXTAUTH_SECRET="uma-chave-secreta-altamente-segura"
+NEXTAUTH_URL="http://localhost:3000"
+
+# API URL
+NEXT_PUBLIC_API_URL="http://localhost:3000"
 ```
 
-4. **Configure o banco de dados**
+### 3. Sincronizar o Schema e Popular o Banco
+Execute os comandos do Prisma para aplicar o schema ao banco de dados PostgreSQL/Supabase e popular a tabela com dados fictícios para teste:
+
 ```bash
-# Criar e aplicar migrações
+# Sincroniza o schema com o banco de dados
 npm run db:push
 
-# Popular com dados de exemplo (opcional)
+# Popula o banco com os dados iniciais do corretor de exemplo
 npm run db:seed
 ```
 
-5. **Inicie o servidor de desenvolvimento**
+### 4. Rodar o Servidor de Desenvolvimento
 ```bash
 npm run dev
 ```
+Acesse a aplicação em [http://localhost:3000](http://localhost:3000).
 
-6. **Acesse a aplicação**
-```
-http://localhost:3000
-```
+---
 
-## 📝 Dados de Teste
+## 📝 Dados de Acesso (Teste)
 
-Se você executou o seed, use:
-- **Email**: corretor@example.com
-- **Senha**: 123456
+Se você executou o seed do banco de dados (`npm run db:seed`), pode utilizar as seguintes credenciais para acessar o painel administrativo:
 
-## 📁 Estrutura do Projeto
+- **E-mail**: `corretor@example.com`
+- **Senha**: `123456`
+
+---
+
+## 📁 Estrutura de Diretórios Relevantes
 
 ```
 imovel-pro/
 ├── prisma/
-│   └── schema.prisma          # Schema do banco de dados
+│   ├── schema.prisma          # Schema do banco de dados PostgreSQL
+│   └── seed.ts                # Script para popular o banco de dados
 ├── src/
 │   ├── app/
-│   │   ├── (auth)/            # Páginas de autenticação
-│   │   │   ├── login/
-│   │   │   └── register/
-│   │   ├── (dashboard)/       # Dashboard e páginas protegidas
-│   │   │   ├── dashboard/
-│   │   │   ├── clientes/
-│   │   │   ├── imoveis/
-│   │   │   ├── visitas/
-│   │   │   └── perfil/
-│   │   ├── api/               # API routes
-│   │   │   ├── auth/
-│   │   │   ├── clientes/
-│   │   │   ├── imoveis/
-│   │   │   ├── visitas/
-│   │   │   ├── perfil/
-│   │   │   ├── register/
-│   │   │   └── dashboard/
-│   │   └── globals.css        # Estilos globais
-│   ├── components/            # Componentes reutilizáveis
-│   │   ├── Sidebar.tsx
-│   │   ├── Button.tsx
-│   │   ├── Modal.tsx
-│   │   ├── Toast.tsx
-│   │   └── Card.tsx
-│   ├── lib/
-│   │   ├── auth.ts            # Configuração NextAuth
-│   │   ├── db.ts              # Cliente Prisma
-│   │   └── utils.ts           # Funções utilitárias
-│   └── types/
-│       └── next-auth.d.ts     # Tipos de autenticação
+│   │   ├── (auth)/            # Rotas de Autenticação (Login e Registro)
+│   │   ├── (dashboard)/       # Área logada (Dashboard, Imóveis, Clientes, Visitas, Perfil)
+│   │   ├── api/               # API Routes do Next.js
+│   │   ├── supabase-demo/     # Página demonstrativa de conexão direta com Supabase
+│   │   ├── globals.css        # Variáveis CSS e estilos globais
+│   │   └── page.tsx           # Landing Page premium com o protótipo funcional
+│   ├── components/            # Componentes reutilizáveis polidos
+│   ├── lib/                   # Configurações do NextAuth e cliente Prisma
+│   └── utils/
+│       └── supabase/          # Clientes server/client/middleware do Supabase SSR
 └── package.json
 ```
 
-## 🎨 Design Tokens
-
-As cores definidas para o projeto:
-
-- **Azul da Meia Noite**: #0D1B40 (principal)
-- **Azul Claro**: #5DADE2 (acentos)
-- **Branco**: #FFFFFF (fundo)
-- **Azul Médio**: #2563EB (botões primários)
+---
 
 ## 🔧 Scripts Disponíveis
 
-```bash
-# Desenvolvimento
-npm run dev              # Inicia servidor de desenvolvimento
+No arquivo `package.json` você encontrará os seguintes comandos prontos para uso:
 
-# Build
-npm run build            # Cria build para produção
-npm run start            # Inicia servidor em produção
-
-# Banco de Dados
-npm run db:push          # Sincroniza schema com banco
-npm run db:studio        # Abre Prisma Studio
-npm run db:seed          # Popula com dados de exemplo
-
-# Linting
-npm run lint             # Verifica código
-```
-
-## 🔐 Autenticação
-
-O projeto utiliza NextAuth com autenticação por credenciais (email/senha):
-
-- Senhas são hash com bcrypt
-- Sessão baseada em JWT
-- Proteção de rotas automática
-- Refresh de token automático
-
-## 🛠️ Desenvolvimento
-
-### Adicionando Novas Páginas
-
-1. Crie a pasta em `src/app/(dashboard)/sua-pagina/`
-2. Crie `page.tsx` e `page.module.css`
-3. Use o layout protegido automaticamente
-
-### Adicionando Novas APIs
-
-1. Crie `src/app/api/sua-api/route.ts`
-2. Implemente GET/POST/PUT/DELETE conforme necessário
-3. Use `await auth()` para verificar autenticação
-4. Use `prisma` para acessar o banco
-
-### Criando Componentes
-
-1. Crie em `src/components/SeuComponente.tsx`
-2. Crie o CSS em `src/components/SeuComponente.module.css`
-3. Exporte como default
-4. Importe nas páginas que usar
-
-## 📦 Dependências Principais
-
-- **Next.js 14**: Framework React moderno
-- **React 18**: Biblioteca UI
-- **Prisma**: ORM para banco de dados
-- **NextAuth**: Autenticação
-- **bcryptjs**: Hashing de senhas
-- **lucide-react**: Ícones
-
-## 🚢 Deploy
-
-### Vercel (Recomendado)
-
-O projeto está pronto para upload no Vercel. Se você está usando o repositório com a pasta `imovel-pro`, configure o `Root Directory` do projeto Vercel como `imovel-pro`.
-
-1. Faça push do código para GitHub
-2. Conecte o repositório no Vercel
-3. Configure variáveis de ambiente:
-   - `DATABASE_URL`: URL do banco (ex: Supabase)
-   - `NEXTAUTH_SECRET`: Chave secreta
-   - `NEXTAUTH_URL`: URL de produção
-4. Em Settings > General > Root Directory, defina `imovel-pro`
-5. Deploy automático a cada push
-
-### Outras Plataformas
-
-O projeto é compatível com qualquer plataforma que suporte Node.js 18+.
-
-## 📋 Checklist de Desenvolvimento
-
-- [x] Autenticação (login/registro)
-- [x] CRUD de Imóveis
-- [x] CRUD de Clientes
-- [x] CRUD de Visitas
-- [x] Dashboard com estatísticas
-- [x] Perfil de usuário
-- [x] Responsividade
-- [x] Componentes reutilizáveis
-- [x] Seed de dados
-- [ ] Testes automatizados
-- [ ] Relatórios PDF
-- [ ] Integração com mapas
-- [ ] Notificações por email
-- [ ] Upload de imagens
-
-## 🐛 Troubleshooting
-
-### Erro ao conectar ao banco de dados
-```bash
-# Verifique o .env.local
-# Certifique-se que DATABASE_URL está correto
-npm run db:push
-```
-
-### Erro de autenticação
-```bash
-# Gere uma nova NEXTAUTH_SECRET
-openssl rand -base64 32
-# Copie para .env.local
-```
-
-### Build falha
-```bash
-# Limpe cache
-rm -rf .next
-npm run build
-```
-
-## 📞 Suporte
-
-Para problemas e sugestões, entre em contato ou abra uma issue.
-
-## 📄 Licença
-
-Este projeto é de código aberto e disponível sob licença MIT.
+| Comando | Descrição |
+| :--- | :--- |
+| `npm run dev` | Inicia o servidor de desenvolvimento local |
+| `npm run build` | Compila o projeto Next.js para produção |
+| `npm run start` | Inicia o servidor de produção compilado localmente |
+| `npm run lint` | Executa a verificação estática do código (ESLint) |
+| `npm run db:push` | Sincroniza o schema do Prisma com o banco de dados conectado |
+| `npm run db:studio` | Abre o Prisma Studio (interface web para gerenciar tabelas) |
+| `npm run db:seed` | Popula o banco com dados iniciais e corretor de testes |
 
 ---
 
-Desenvolvido com ❤️ para imobiliárias e corretores profissionais.
+## 🚢 Deploy na Vercel
+
+O projeto está totalmente configurado para deploy imediato na **Vercel**:
+
+1. Crie um novo projeto na Vercel e importe o seu repositório do GitHub.
+2. Defina o **Root Directory** como `imovel-pro` caso esteja usando em subpasta.
+3. Insira as variáveis de ambiente necessárias (`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
+4. Clique em **Deploy**! A Vercel executará o build automaticamente e entregará seu app com certificados SSL ativos.
+5. Após o deploy, certifique-se de executar as migrations e o seed utilizando o terminal CLI do projeto ou conectando suas variáveis localmente para popular o banco de produção.
+
+---
+
+## 📋 Checklist de Funcionalidades
+
+- [x] Landing Page Premium & Responsiva
+- [x] Autenticação Segura (Login & Registro)
+- [x] CRUD de Imóveis (Filtros & Busca)
+- [x] CRUD de Clientes (Segmentação & Orçamentos)
+- [x] CRUD de Visitas (Status & Agendamento Integrado)
+- [x] Dashboard Analítico com Estatísticas
+- [x] Perfil do Corretor (Edição de CRECI, Empresa e Senha)
+- [x] Conectividade com Supabase (Direct SQL & SSR Middleware)
+- [ ] Upload de Fotos de Imóveis (Integração com Supabase Storage)
+- [ ] Relatórios em PDF de Vendas/Visitas
+- [ ] Envio de Confirmação de Visita por E-mail
+
+---
+
+## 📄 Licença
+
+Este projeto é licenciado sob a licença MIT. Sinta-se livre para utilizar, modificar e distribuir o código conforme necessário.
+
+---
+
+Desenvolvido com ❤️ para imobiliárias e corretores de alta performance.
