@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import OfflineNotice from '@/components/OfflineNotice'
 
 export const metadata: Metadata = {
   title: 'ImóvelPro — Plataforma para Imobiliárias e Corretores',
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        {children}
+        <OfflineNotice />
+      </body>
     </html>
   )
 }
