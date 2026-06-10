@@ -67,6 +67,12 @@ export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
 
+  const userId = (session?.user as any)?.id
+  if (!userId) {
+    console.error('[ERROR] POST /api/imoveis - session exists but user.id is missing:', JSON.stringify(session))
+    return NextResponse.json({ error: 'Sessão inválida. Faça login novamente.' }, { status: 401 })
+  }
+
   // ✅ SEGURANÇA: Rate limiting em criação
   const clientIP = getClientIP(req)
   const rateLimit = checkRateLimit(clientIP, 'api')
@@ -105,9 +111,9 @@ export async function POST(req: NextRequest) {
         cidade,
         estado,
         cep,
-        imagens: imagens ? JSON.stringify(imagens) : '[]',
+        imagens: imagens || '[]',
         destaque,
-        userId: (session?.user as any)?.id,
+        userId,
       },
     })
 

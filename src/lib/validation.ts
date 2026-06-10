@@ -171,7 +171,9 @@ export function validateImovelInput(data: any): { valid: boolean; data?: Validat
       cidade: sanitizeString(data.cidade),
       estado: sanitizeString(data.estado),
       cep: data.cep ? sanitizeString(data.cep) : undefined,
-      imagens: data.imagens ? sanitizeString(data.imagens) : undefined,
+      imagens: Array.isArray(data.imagens)
+        ? JSON.stringify(data.imagens.map((s: string) => String(s).trim()).filter(Boolean))
+        : (typeof data.imagens === 'string' && data.imagens.trim() ? data.imagens : undefined),
       destaque: typeof data.destaque === 'boolean' ? data.destaque : false,
     },
   };

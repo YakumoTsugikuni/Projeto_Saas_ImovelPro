@@ -115,7 +115,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         cidade,
         estado,
         cep,
-        imagens: imagens ? JSON.stringify(imagens) : '[]',
+        imagens: imagens || '[]',
         destaque,
       },
     })
