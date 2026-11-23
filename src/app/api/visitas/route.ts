@@ -50,13 +50,26 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const data = new Date(dataVisita)
+    if (Number.isNaN(data.getTime())) {
+      return NextResponse.json({ error: 'Data inválida' }, { status: 400 })
+    }
+
+    // ✅ SEGURANÇA: imóvel e cliente precisam pertencer ao usuário logado
+    const [imovel, cliente] = await Promise.all([
+      prisma.imovel.findFirst({ where: { id: String(imovelId), userId }, select: { id: true } }),
+      prisma.cliente.findFirst({ where: { id: String(clienteId), userId }, select: { id: true } }),
+    ])
+    if (!imovel || !cliente) {
+      return NextResponse.json({ error: 'Imóvel ou cliente não encontrado' }, { status: 404 })
+    }
+
     const visita = await prisma.visita.create({
       data: {
-        // Corrigido: mapeando dataVisita (front) para dataVisita (banco)
-        dataVisita: new Date(dataVisita),
-        imovelId,
-        clienteId,
-        observacoes,
+        dataVisita: data,
+        imovelId: imovel.id,
+        clienteId: cliente.id,
+        observacoes: typeof observacoes === 'string' ? observacoes.slice(0, 1000) : undefined,
         userId: userId,
       },
       include: {
