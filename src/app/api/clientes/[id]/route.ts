@@ -22,7 +22,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     // ✅ SEGURANÇA: só atualiza se o cliente pertencer ao usuário logado
     const result = await prisma.cliente.updateMany({
       where: { id, userId },
-      data: validation.data,
+      data: { ...validation.data, email: validation.data.email?.toLowerCase() ?? null },
     })
     if (result.count === 0) {
       return NextResponse.json({ error: 'Cliente não encontrado' }, { status: 404 })

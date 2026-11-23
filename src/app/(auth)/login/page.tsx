@@ -167,7 +167,8 @@ export default function LoginPage() {
           </form>
 
           <div className={styles.authFooter}>
-            <p>Não tem uma conta? <Link href="/register" className={styles.authLink}>Cadastre-se grátis</Link></p>
+            <p><Link href="/esqueci-senha" className={styles.authLink}>Esqueci minha senha</Link></p>
+            <p>Não tem uma conta?<Link href="/register" className={styles.authLink}>Cadastre-se grátis</Link></p>
           </div>
         </div>
       </div>

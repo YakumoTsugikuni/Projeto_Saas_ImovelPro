@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     const cliente = await prisma.cliente.create({
       data: {
         nome,
-        email: email || `cliente-${Date.now()}@noemail.com`, // ✅ Email obrigatório no schema
+        email: email ? email.toLowerCase() : null,
         telefone,
         tipo: tipo || 'COMPRADOR', // ✅ Tipo sempre com valor padrão
         interesse,
@@ -98,6 +98,9 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json(cliente, { status: 201 })
     return setRateLimitHeaders(response, rateLimit)
   } catch (error) {
+    if ((error as { code?: string })?.code === 'P2002') {
+      return NextResponse.json({ error: 'Você já tem um cliente com este email' }, { status: 409 })
+    }
     console.error('Error creating cliente:', error)
     return NextResponse.json({ error: 'Erro ao criar cliente' }, { status: 500 })
   }

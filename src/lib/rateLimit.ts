@@ -20,12 +20,22 @@ const RATE_LIMITS = {
   default: { requests: 30, windowMs: 1 * 60 * 1000 }, // 30 requisições por minuto (padrão)
 }
 
+/**
+ * IP do visitante. Na Vercel, `x-vercel-forwarded-for` e `x-real-ip` são definidos pela
+ * própria plataforma (o visitante não consegue falsificar). `x-client-ip` não é mais aceito,
+ * porque qualquer um pode enviá-lo e burlar o limite.
+ *
+ * ⚠️ O contador fica na memória do servidor: em hospedagem serverless cada instância tem o seu.
+ * Para um limite global, troque por Upstash Redis (@upstash/ratelimit).
+ */
 export function getClientIP(request: Request): string {
-  const forwardedFor = request.headers.get('x-forwarded-for')
-  const clientIP = request.headers.get('x-client-ip')
-  const realIP = request.headers.get('x-real-ip')
-
-  return forwardedFor?.split(',')[0] || clientIP || realIP || 'unknown'
+  const h = request.headers
+  const ip =
+    h.get('x-vercel-forwarded-for')?.split(',')[0] ||
+    h.get('x-real-ip') ||
+    h.get('x-forwarded-for')?.split(',')[0] ||
+    'unknown'
+  return ip.trim()
 }
 
 export function checkRateLimit(

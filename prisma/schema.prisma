@@ -27,6 +27,7 @@ model User {
   imoveis   Imovel[]
   clientes  Cliente[]
   visitas   Visita[]
+  resetTokens PasswordResetToken[]
   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -70,7 +71,7 @@ model Imovel {
 model Cliente {
   id          String   @id @default(cuid())
   nome        String
-  email       String   @unique
+  email       String?  // opcional; único por corretor (dois corretores podem ter o mesmo cliente)
   telefone    String?
   tipo        String   // COMPRADOR, VENDEDOR, etc.
   
@@ -84,6 +85,8 @@ model Cliente {
   
   visitas     Visita[]
   createdAt   DateTime @default(now())
+
+  @@unique([userId, email])
 }
 
 // 4. VISITAS/AGENDAMENTOS
@@ -104,4 +107,18 @@ model Visita {
   user        User     @relation(fields: [userId], references: [id])
   
   createdAt   DateTime @default(now())
+}
+
+// 5. RECUPERAÇÃO DE SENHA
+// Guarda só o hash do token: quem ler o banco não consegue usar os links.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }

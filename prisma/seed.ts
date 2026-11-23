@@ -4,6 +4,14 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
+  // ⚠️ TRAVA: este seed APAGA TODOS OS DADOS. Só roda com confirmação explícita.
+  if (process.env.SEED_APAGAR_TUDO !== 'sim' || process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'Seed bloqueado: ele apaga todos os usuários, imóveis, clientes e visitas. ' +
+        'Use só em banco de teste, com SEED_APAGAR_TUDO=sim.'
+    )
+  }
+
   // 1. Limpar dados existentes (Ordem importa para não quebrar chaves estrangeiras)
   await prisma.visita.deleteMany()
   await prisma.cliente.deleteMany()
