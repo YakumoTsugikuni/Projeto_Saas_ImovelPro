@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { validatePasswordStrengthClient, validateEmailClient } from '@/lib/clientValidation'
 import styles from '../auth.module.css'
@@ -63,7 +64,18 @@ export default function RegisterPage() {
       if (!res.ok) {
         setError(data.error || 'Erro ao criar conta.')
       } else {
-        router.push('/login?registered=1')
+        // Conta criada: entra direto, sem obrigar a digitar tudo de novo
+        const login = await signIn('credentials', {
+          email: form.email.trim().toLowerCase(),
+          password: form.password,
+          redirect: false,
+        })
+        if (login?.error) {
+          router.push('/login?registered=1')
+        } else {
+          router.push('/dashboard')
+          router.refresh()
+        }
       }
     } catch {
       setError('Ocorreu um erro. Tente novamente.')

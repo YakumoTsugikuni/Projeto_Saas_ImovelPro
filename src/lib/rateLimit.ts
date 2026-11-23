@@ -14,7 +14,7 @@ const store: RateLimitStore = {}
 
 const RATE_LIMITS = {
   // Limites específicos por endpoint
-  login: { requests: 5, windowMs: 15 * 60 * 1000 }, // 5 tentativas em 15 minutos
+  login: { requests: 10, windowMs: 15 * 60 * 1000 }, // 10 tentativas em 15 minutos
   register: { requests: 3, windowMs: 60 * 60 * 1000 }, // 3 registros em 1 hora
   api: { requests: 100, windowMs: 15 * 60 * 1000 }, // 100 requisições em 15 minutos
   default: { requests: 30, windowMs: 1 * 60 * 1000 }, // 30 requisições por minuto (padrão)

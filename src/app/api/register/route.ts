@@ -18,8 +18,12 @@ export async function POST(req: NextRequest) {
       return setRateLimitHeaders(response, rateLimit)
     }
 
-    const body = await req.json()
-    const { name, email, password, phone, empresa, creci } = body
+    const body = await req.json().catch(() => null)
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 })
+    }
+    const { name, password, phone, empresa, creci } = body
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
 
     // ✅ SEGURANÇA #2: Validação de entrada obrigatória
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
@@ -89,6 +93,10 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     )
   } catch (error) {
+    // Dois cadastros simultâneos com o mesmo email
+    if ((error as { code?: string })?.code === 'P2002') {
+      return NextResponse.json({ error: 'Este email já está cadastrado' }, { status: 409 })
+    }
     console.error('Register error:', error)
     // ✅ SEGURANÇA #7: Não expor detalhes de erro ao cliente
     return NextResponse.json(

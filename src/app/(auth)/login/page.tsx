@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -11,6 +11,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [form, setForm] = useState({ email: '', password: '' })
+  const [justRegistered, setJustRegistered] = useState(false)
+  useEffect(() => {
+    setJustRegistered(new URLSearchParams(window.location.search).has('registered'))
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,13 +23,13 @@ export default function LoginPage() {
 
     try {
       const result = await signIn('credentials', {
-        email: form.email,
+        email: form.email.trim().toLowerCase(),
         password: form.password,
         redirect: false,
       })
 
       if (result?.error) {
-        setError('Email ou senha inválidos. Verifique seus dados.')
+        setError('Email ou senha inválidos (ou muitas tentativas — aguarde 15 minutos).')
       } else {
         router.push('/dashboard')
         router.refresh()
@@ -91,6 +95,11 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className={styles.authForm}>
+            {justRegistered && !error && (
+              <div className={styles.authAlert} style={{ background: 'var(--success-bg, #ecfdf5)', color: 'var(--success, #047857)' }}>
+                Conta criada! Entre com seu email e senha.
+              </div>
+            )}
             {error && (
               <div className={styles.authAlert}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

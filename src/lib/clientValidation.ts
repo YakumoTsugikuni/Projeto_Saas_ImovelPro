@@ -5,7 +5,7 @@
  */
 
 export const PASSWORD_MIN_LENGTH = 8
-export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,128}$/
 
 export function validatePasswordStrengthClient(password: string): { valid: boolean; error?: string } {
   if (!password || password.length < PASSWORD_MIN_LENGTH) {
@@ -18,7 +18,7 @@ export function validatePasswordStrengthClient(password: string): { valid: boole
   if (!PASSWORD_REGEX.test(password)) {
     return {
       valid: false,
-      error: 'Senha deve conter: maiúsculas, minúsculas, números e caracteres especiais (@$!%*?&)',
+      error: 'Senha deve conter: maiúsculas, minúsculas, números e um símbolo (ex: @ # ! - .)',
     }
   }
 
