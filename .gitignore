@@ -16,3 +16,5 @@ prisma/dev.db-journal
 .DS_Store
 .env
 .vercel
+*.tsbuildinfo
+__pycache__/

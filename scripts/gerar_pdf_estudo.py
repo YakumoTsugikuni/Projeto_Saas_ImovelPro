@@ -8,8 +8,10 @@ import re
 from fpdf import FPDF
 from datetime import datetime
 
-input_md = r"c:\Projeto PROMETHEU\imovel-pro\ESTUDO_COMPLETO.md"
-output_pdf = r"c:\Projeto PROMETHEU\imovel-pro\ESTUDO_IMOVEL_PRO.pdf"
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+input_md = str(ROOT / 'docs' / 'ESTUDO_COMPLETO.md')
+output_pdf = str(ROOT / 'docs' / 'pdf' / 'ESTUDO_IMOVEL_PRO.pdf')
 
 class PDF(FPDF):
     def header(self):

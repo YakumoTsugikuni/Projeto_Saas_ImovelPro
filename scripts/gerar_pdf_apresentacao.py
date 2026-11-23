@@ -16,8 +16,10 @@ from datetime import datetime
 import html
 
 # Configurações
-input_md = r"c:\Projeto PROMETHEU\imovel-pro\apresentacao_projeto.md"
-output_pdf = r"c:\Projeto PROMETHEU\imovel-pro\apresentacao_projeto.pdf"
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+input_md = str(ROOT / 'docs' / 'apresentacao_projeto.md')
+output_pdf = str(ROOT / 'docs' / 'pdf' / 'apresentacao_projeto.pdf')
 
 def parse_markdown(md_content):
     """Converte markdown para uma estrutura de elementos PDF mitigando travamentos"""

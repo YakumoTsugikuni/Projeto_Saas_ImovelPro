@@ -172,6 +172,15 @@ O projeto está totalmente configurado para deploy imediato na **Vercel**:
 
 ---
 
+## 📚 Documentação
+
+Toda a documentação fica em [`docs/`](docs/) — comece pelo [índice](docs/INDEX.md).
+
+- [Desenvolvimento](docs/DEVELOPMENT.md) · [Deploy](docs/DEPLOYMENT.md) · [Testes](docs/TESTING.md) · [FAQ](docs/FAQ.md)
+- [Padrões](docs/PATTERNS.md) · [Visual](docs/VISUAL.md) · [Arquivos](docs/FILES.md) · [Resumo](docs/SUMMARY.md)
+- Segurança: [auditoria](docs/seguranca/SECURITY_AUDIT_REPORT.md) · [melhorias](docs/seguranca/SECURITY_IMPROVEMENTS.md)
+- Estudo e apresentação: [`docs/pdf/`](docs/pdf/) (gerados por `python scripts/gerar_pdf_estudo.py` e `scripts/gerar_pdf_apresentacao.py`)
+
 ## 📄 Licença
 
 Este projeto é licenciado sob a licença MIT. Sinta-se livre para utilizar, modificar e distribuir o código conforme necessário.
