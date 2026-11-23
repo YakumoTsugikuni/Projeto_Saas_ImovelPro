@@ -53,7 +53,8 @@ export async function PUT(req: NextRequest) {
       const updateData: any = {
         nome: name ? String(name).slice(0, 255) : undefined,
         phone: phone ? String(phone).slice(0, 20) : undefined,
-        avatar: avatar ? String(avatar).slice(0, 500) : undefined,
+        // '' remove a foto; só aceita links http(s) para evitar javascript:/data: na tag <img>
+        avatar: avatar === '' ? null : /^https?:\/\//i.test(String(avatar ?? '')) ? String(avatar).slice(0, 500) : undefined,
         creci: creci ? String(creci).slice(0, 20) : undefined,
         empresa: empresa ? String(empresa).slice(0, 255) : undefined,
       }

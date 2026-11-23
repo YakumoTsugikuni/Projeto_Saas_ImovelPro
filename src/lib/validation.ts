@@ -171,9 +171,15 @@ export function validateImovelInput(data: any): { valid: boolean; data?: Validat
       cidade: sanitizeString(data.cidade),
       estado: sanitizeString(data.estado),
       cep: data.cep ? sanitizeString(data.cep) : undefined,
+      // Só links http(s) sem aspas/parênteses: as imagens vão para CSS url(...) nas páginas
       imagens: Array.isArray(data.imagens)
-        ? JSON.stringify(data.imagens.map((s: string) => String(s).trim()).filter(Boolean))
-        : (typeof data.imagens === 'string' && data.imagens.trim() ? data.imagens : undefined),
+        ? JSON.stringify(
+            data.imagens
+              .map((s: unknown) => String(s).trim())
+              .filter((s: string) => /^https?:\/\/[^\s"'()<>]+$/i.test(s) && s.length <= 1000)
+              .slice(0, 30)
+          )
+        : undefined,
       destaque: typeof data.destaque === 'boolean' ? data.destaque : false,
     },
   };

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { formatDate } from '@/lib/utils'
 import styles from './page.module.css'
+import ImageUpload from '@/components/ImageUpload'
 
 interface UserProfile {
   id: string
@@ -170,8 +171,13 @@ export default function PerfilPage() {
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">URL do Avatar</label>
-                <input type="url" className="form-input" placeholder="https://exemplo.com/foto.jpg" value={form.avatar || ''} onChange={setF('avatar')} />
+                <label className="form-label">Foto de perfil</label>
+                <ImageUpload
+                  kind="avatar"
+                  max={1}
+                  value={form.avatar ? [form.avatar] : []}
+                  onChange={urls => setForm((f: typeof form) => ({ ...f, avatar: urls[0] || '' }))}
+                />
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button id="save-profile" type="submit" className="btn btn-primary" disabled={saving}>

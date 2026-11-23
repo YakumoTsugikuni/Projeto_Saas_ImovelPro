@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { formatCurrency, tipoImovelLabel, statusImovelLabel } from '@/lib/utils'
 import styles from './page.module.css'
+import ImageUpload from '@/components/ImageUpload'
 
 interface Imovel {
   id: string
@@ -310,8 +311,13 @@ export default function ImoveisPage() {
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">URLs de Imagens (uma por linha)</label>
-                <textarea className="form-textarea" placeholder="https://exemplo.com/foto1.jpg" value={form.imagens} onChange={setF('imagens')} rows={3} />
+                <label className="form-label">Fotos do imóvel</label>
+                <ImageUpload
+                  kind="imovel"
+                  max={15}
+                  value={form.imagens ? form.imagens.split('\n').filter(Boolean) : []}
+                  onChange={urls => setForm((f: typeof form) => ({ ...f, imagens: urls.join('\n') }))}
+                />
               </div>
               <div className="form-group">
                 <label className="form-label">Descrição</label>
