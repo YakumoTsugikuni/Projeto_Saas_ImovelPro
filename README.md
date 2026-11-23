@@ -1,25 +1,25 @@
-# 🏠 ImóvelPro - SaaS para Imobiliárias
+#  ImóvelPro - SaaS para Imobiliárias
 
 Uma plataforma SaaS moderna, inteligente e de alta performance desenvolvida especialmente para corretores e imobiliárias gerenciarem seus imóveis, clientes e agendamento de visitas com máxima eficiência.
 
 ---
 
-## 🎨 Novo Visual Premium & Design System
+##  Novo Visual Premium & Design System
 
 O **ImóvelPro** conta com uma interface de usuário rica, extremamente polida e moderna, projetada para impressionar desde o primeiro contato.
 
-- 🌌 **Paleta de Cores Curada**:
+-  **Paleta de Cores Curada**:
   - **Azul da Meia Noite** (`#0D1B40`): Cor principal para textos e headlines, transmitindo solidez e elegância.
   - **Azul Médio** (`#2563EB`): Utilizado para botões primários e interações principais.
   - **Azul Claro** (`#5DADE2`): Para acentos, badges e links importantes.
   - **Off-White** (`#F8FAFF`): Fundo limpo e suave para minimizar a fadiga visual.
-- 📐 **Tipografia Moderna**: Uso da fonte **Inter** (Google Fonts) com pesos estrategicamente definidos para excelente legibilidade.
-- ✨ **Micro-animações**: Efeitos sutis de *fade-in*, *slide-up* e transições suaves nos botões, cards e overlays de modais, trazendo dinamismo e fluidez para a experiência do usuário.
-- 📱 **Responsividade Total (Mobile-First)**: Otimização completa para qualquer tamanho de tela (desktops, tablets e smartphones).
+-  **Tipografia Moderna**: Uso da fonte **Inter** (Google Fonts) com pesos estrategicamente definidos para excelente legibilidade.
+-  **Micro-animações**: Efeitos sutis de *fade-in*, *slide-up* e transições suaves nos botões, cards e overlays de modais, trazendo dinamismo e fluidez para a experiência do usuário.
+-  **Responsividade Total (Mobile-First)**: Otimização completa para qualquer tamanho de tela (desktops, tablets e smartphones).
 
 ---
 
-## ⚡ Stack Tecnológica
+##  Stack Tecnológica
 
 O projeto utiliza o que há de mais moderno no ecossistema de desenvolvimento web:
 
@@ -33,18 +33,18 @@ O projeto utiliza o que há de mais moderno no ecossistema de desenvolvimento we
 
 ---
 
-## ✨ Principais Funcionalidades
+##  Principais Funcionalidades
 
-- 🔐 **Autenticação Segura**: Login completo com NextAuth, hash de senhas com bcrypt, sessões seguras em JWT e proteção automática de rotas do sistema.
-- 🏢 **Gestão de Imóveis**: CRUD completo com filtros dinâmicos por tipo (Casa, Apartamento, Terreno) e status (Venda, Aluguel, Vendido, Alugado).
-- 👥 **Gestão de Clientes**: Cadastro detalhado de prospects e clientes, rastreamento de orçamento de interesse e observações gerais.
-- 📅 **Controle de Visitas**: Agendamento integrado de visitas associando corretores, clientes e imóveis com status em tempo real (Agendada, Concluída, Cancelada).
-- 📊 **Dashboard Analytics**: Gráficos analíticos, contagem de portfólio total em valores, visitas agendadas próximas e acompanhamento de metas.
-- ⚙️ **Integração com Supabase**: Conectividade direta ao Supabase para leitura e gravação assíncrona, além de uma página de demonstração dedicada (`/supabase-demo`) para verificar a sincronização de dados em tempo real.
+-  **Autenticação Segura**: Login completo com NextAuth, hash de senhas com bcrypt, sessões seguras em JWT e proteção automática de rotas do sistema.
+-  **Gestão de Imóveis**: CRUD completo com filtros dinâmicos por tipo (Casa, Apartamento, Terreno) e status (Venda, Aluguel, Vendido, Alugado).
+-  **Gestão de Clientes**: Cadastro detalhado de prospects e clientes, rastreamento de orçamento de interesse e observações gerais.
+-  **Controle de Visitas**: Agendamento integrado de visitas associando corretores, clientes e imóveis com status em tempo real (Agendada, Concluída, Cancelada).
+-  **Dashboard Analytics**: Gráficos analíticos, contagem de portfólio total em valores, visitas agendadas próximas e acompanhamento de metas.
+-  **Integração com Supabase**: Conectividade direta ao Supabase para leitura e gravação assíncrona, além de uma página de demonstração dedicada (`/supabase-demo`) para verificar a sincronização de dados em tempo real.
 
 ---
 
-## 🚀 Como Começar Localmente
+##  Como Começar Localmente
 
 ### Pré-requisitos
 - Node.js 18+
@@ -95,7 +95,7 @@ Acesse a aplicação em [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 📝 Dados de Acesso (Teste)
+##  Dados de Acesso (Teste)
 
 Se você executou o seed do banco de dados (`npm run db:seed`), pode utilizar as seguintes credenciais para acessar o painel administrativo:
 
@@ -104,7 +104,7 @@ Se você executou o seed do banco de dados (`npm run db:seed`), pode utilizar as
 
 ---
 
-## 📁 Estrutura de Diretórios Relevantes
+##  Estrutura de Diretórios Relevantes
 
 ```
 imovel-pro/
@@ -128,7 +128,7 @@ imovel-pro/
 
 ---
 
-## 🔧 Scripts Disponíveis
+##  Scripts Disponíveis
 
 No arquivo `package.json` você encontrará os seguintes comandos prontos para uso:
 
@@ -144,7 +144,7 @@ No arquivo `package.json` você encontrará os seguintes comandos prontos para u
 
 ---
 
-## 🚢 Deploy na Vercel
+##  Deploy na Vercel
 
 O projeto está totalmente configurado para deploy imediato na **Vercel**:
 
@@ -156,7 +156,7 @@ O projeto está totalmente configurado para deploy imediato na **Vercel**:
 
 ---
 
-## 📋 Checklist de Funcionalidades
+##  Checklist de Funcionalidades
 
 - [x] Landing Page Premium & Responsiva
 - [x] Autenticação Segura (Login & Registro)
@@ -172,7 +172,7 @@ O projeto está totalmente configurado para deploy imediato na **Vercel**:
 
 ---
 
-## 📚 Documentação
+##  Documentação
 
 Toda a documentação fica em [`docs/`](docs/) — comece pelo [índice](docs/INDEX.md).
 
@@ -181,7 +181,7 @@ Toda a documentação fica em [`docs/`](docs/) — comece pelo [índice](docs/IN
 - Segurança: [auditoria](docs/seguranca/SECURITY_AUDIT_REPORT.md) · [melhorias](docs/seguranca/SECURITY_IMPROVEMENTS.md)
 - Estudo e apresentação: [`docs/pdf/`](docs/pdf/) (gerados por `python scripts/gerar_pdf_estudo.py` e `scripts/gerar_pdf_apresentacao.py`)
 
-## 📄 Licença
+##  Licença
 
 Este projeto é licenciado sob a licença MIT. Sinta-se livre para utilizar, modificar e distribuir o código conforme necessário.
 
